@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - CIERREX</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <!-- El logo se inyectará aquí gracias a app.js si existe -->
+            <a class="navbar-brand" id="navbarLogoText" href="#"><b>CIERREX</b></a>
+            <img id="navbarLogoImg" src="" alt="Logo" class="d-none" style="max-height: 40px;">
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="cierrex.html">Cierres</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href="historial.html">Historial</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item nav-admin">
+                        <a class="nav-link" href="usuarios.html">Usuarios</a>
+                    </li>
+                    <li class="nav-item nav-admin">
+                        <a class="nav-link active" href="configuracion.html">Configuración</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="mt-4 mb-4 text-center display-4">Configuración del Sistema</h1>
+        
+        <div class="card card-form mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-center h4 mb-3">Estilos y Personalización</h5>
+                <div id="configAlert" class="alert" role="alert"></div>
+                
+                <form id="configForm" class="col-12 col-md-10 mx-auto mt-4">
+                    
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6 mb-3 text-center">
+                            <label class="form-label d-block text-start">Logotipo de la Empresa</label>
+                            <img id="logoPreview" src="" class="img-preview mb-2 d-none" style="object-fit: contain; max-height: 80px;" alt="Logo Preview">
+                            <input class="form-control" type="file" id="logoUpload" accept="image/*">
+                            <small class="text-muted d-block mt-1">Se mostrará en el Login, Navbar y PDF.</small>
+                            <button type="button" class="btn btn-sm btn-outline-danger mt-2" id="clearLogoBtn">Quitar Logo</button>
+                        </div>
+
+                        <div class="col-md-6 mb-3 text-center border-start">
+                            <label class="form-label d-block text-start">Apariencia Visual</label>
+                            
+                            <div class="form-check form-switch mt-3 d-flex justify-content-center align-items-center gap-2">
+                                <input class="form-check-input" type="checkbox" id="themeDarkMode" style="transform: scale(1.5);">
+                                <label class="form-check-label ms-2" for="themeDarkMode">
+                                    <strong>Activar Modo Oscuro</strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 pt-3 border-top">
+                        <div class="col-md-6 mb-3">
+                            <label for="primaryColor" class="form-label">Color Principal (Menú y Títulos)</label>
+                            <div class="d-flex align-items-center">
+                                <input type="color" class="form-control form-control-color w-100" id="primaryColor" value="#1E3A8A" title="Elige tu color">
+                                <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="document.getElementById('primaryColor').value='#1E3A8A'">Reset</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="secondaryColor" class="form-label">Color Secundario (Botones y Detalles)</label>
+                            <div class="d-flex align-items-center">
+                                <input type="color" class="form-control form-control-color w-100" id="secondaryColor" value="#FB923C" title="Elige tu color">
+                                <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="document.getElementById('secondaryColor').value='#FB923C'">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary d-block mx-auto mt-4 w-50" onclick="saveConfiguration()">Guardar Configuración</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/configuracion.js"></script>
+</body>
+</html>

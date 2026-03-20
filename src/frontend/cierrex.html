@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cierres - CIERREX</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/pdf-utils.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" id="navbarLogoText" href="#"><b>CIERREX</b></a>
+            <img id="navbarLogoImg" src="" alt="Logo" class="d-none" style="max-height: 40px;">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cierrex.html">Cierres</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href="historial.html">Historial</a>
+                    </li>
+                    <li class="nav-item nav-middle">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item nav-admin">
+                        <a class="nav-link" href="usuarios.html">Usuarios</a>
+                    </li>
+                    <li class="nav-item nav-admin">
+                        <a class="nav-link" href="configuracion.html">Configuración</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="mt-4 mb-4 text-center display-4">Registrar Cierre</h1>
+        <div class="card card-form mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-center h4">Nuevo Cierre de Caja</h5>
+                <div id="cierreAlert" class="alert" role="alert"></div>
+                <form id="cierreForm" class="col-12 col-md-10 mx-auto" novalidate>
+                    <h6 class="mt-3 mb-2">Desglose de Formas de Pago</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="efectivo" class="form-label">Efectivo (Bs)</label>
+                            <input type="number" class="form-control" id="efectivo" step="0.01" min="0" value="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="debito" class="form-label">Débito (Bs)</label>
+                            <input type="number" class="form-control" id="debito" step="0.01" min="0" value="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="credito" class="form-label">Crédito (Bs)</label>
+                            <input type="number" class="form-control" id="credito" step="0.01" min="0" value="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="pagoMovil" class="form-label">Pago Móvil (Bs)</label>
+                            <input type="number" class="form-control" id="pagoMovil" step="0.01" min="0" value="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="transferencias" class="form-label">Transferencias (Bs)</label>
+                            <input type="number" class="form-control" id="transferencias" step="0.01" min="0" value="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="divisas" class="form-label">Divisas (USD)</label>
+                            <input type="number" class="form-control" id="divisas" step="0.01" min="0" value="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="zelle" class="form-label">Zelle (USD)</label>
+                            <input type="number" class="form-control" id="zelle" step="0.01" min="0" value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tasa" class="form-label">Tasa del Dólar del Día (Bs por USD)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="tasa" step="0.01" min="0" value="36.50">
+                            <button class="btn btn-outline-secondary" type="button" id="fetchBcvBtn">Consultar BCV</button>
+                        </div>
+                    </div>
+                    <div id="totals" class="alert alert-info mb-3 d-block">
+                        <strong>Totales:</strong><br>
+                        Total USD: <span id="totalUsd">0.00</span><br>
+                        Total Bs: <span id="totalBs">0.00</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="date" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Comprobante (Imagen)</label>
+                            <input type="file" class="form-control form-control-file" id="image" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <img id="imagePreview" class="image-preview-form d-none" alt="Vista previa de imagen">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descripción / Comentarios (Opcional)</label>
+                        <textarea class="form-control" id="description" rows="2"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-center flex-wrap gap-2">
+                        <button type="button" class="btn btn-primary" id="registerCierreBtn">Registrar</button>
+                        <button type="button" class="btn btn-secondary nav-middle" id="exportCierreBtn">Exportar a PDF</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/cierrex.js"></script>
+</body>
+</html>

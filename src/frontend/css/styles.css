@@ -1,0 +1,200 @@
+/* styles.css - Archivo unificado de estilos para CIERREX */
+
+body {
+    background-color: #F8FAFC;
+    color: #172554;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+.navbar {
+    background-color: #1E3A8A;
+    padding: 15px 0;
+}
+.navbar-brand, .nav-link {
+    color: #FFFFFF !important;
+    font-weight: 500;
+}
+.nav-link:hover {
+    color: #FBBF24 !important;
+}
+.container {
+    margin-top: 30px;
+}
+.card {
+    border: none;
+    background: linear-gradient(135deg, #3B82F6, #FBBF24);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-in;
+}
+.card-login {
+    max-width: 400px;
+}
+.card-form {
+    max-width: 600px;
+}
+.card-dashboard {
+    max-width: 800px;
+}
+.card-historial {
+    max-width: 90%;
+}
+.card-body {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    margin: 4px;
+}
+.btn-primary, .btn-secondary {
+    background-color: #FB923C;
+    border-color: #FB923C;
+    transition: transform 0.2s, background-color 0.3s;
+}
+.btn-primary:hover, .btn-secondary:hover {
+    background-color: #FBBF24;
+    border-color: #FBBF24;
+    transform: scale(1.05);
+}
+.btn-danger {
+    background-color: #EF4444;
+    border-color: #EF4444;
+}
+.btn-danger:hover {
+    background-color: #DC2626;
+    border-color: #DC2626;
+    transform: scale(1.05);
+}
+.form-control, .form-control-file, .form-select {
+    border-color: #FB923C;
+    transition: border-color 0.3s;
+}
+.form-control:focus, .form-control-file:focus, .form-select:focus {
+    border-color: #1E3A8A;
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25);
+}
+.alert {
+    display: none;
+    border-radius: 8px;
+}
+.alert-success {
+    background-color: #34D399;
+    color: #1A2E05;
+}
+.alert-danger {
+    background-color: #EF4444;
+    color: #FFFFFF;
+}
+h1 {
+    font-size: 2.8rem;
+    color: #172554;
+    font-weight: 700;
+}
+h5 {
+    color: #172554;
+    font-weight: 600;
+}
+.text-link {
+    color: #1E3A8A;
+    text-decoration: none;
+}
+.text-link:hover {
+    color: #FBBF24;
+}
+.table {
+    background-color: #F8FAFC;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #FFF8E1;
+}
+.img-preview {
+    max-width: 80px;
+    height: auto;
+    cursor: pointer;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+.image-preview-form {
+    max-width: 200px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+.action-buttons-container {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px;
+    justify-content: center;
+}
+.action-buttons-container .btn {
+    flex-grow: 1;
+    min-width: 80px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 576px) {
+    h1 { font-size: 2.2rem; }
+    .card { max-width: 100%; }
+    .btn-primary, .btn-secondary, .btn-danger { width: 100%; margin-bottom: 10px; }
+    .action-buttons-container { flex-direction: column; }
+}
+
+/* TEMA OSCURO */
+.dark-theme {
+    background-color: #1F2937;
+    color: #F9FAFB;
+}
+.dark-theme .navbar {
+    background-color: #111827;
+}
+.dark-theme .navbar-brand, .dark-theme .nav-link {
+    color: #F9FAFB !important;
+}
+.dark-theme h1, .dark-theme h5, .dark-theme h6, .dark-theme label, .dark-theme p {
+    color: #F9FAFB;
+}
+.dark-theme .card-body {
+    background-color: #374151;
+}
+.dark-theme .table {
+    background-color: #374151;
+    color: #F9FAFB;
+}
+.dark-theme .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #4B5563;
+}
+.dark-theme .form-control, .dark-theme .form-select, .dark-theme input {
+    background-color: #4B5563;
+    color: #F9FAFB;
+    border-color: #6B7280;
+}
+.dark-theme .form-control:focus, .dark-theme .form-select:focus, .dark-theme input:focus {
+    border-color: #9CA3AF;
+    box-shadow: 0 0 0 0.2rem rgba(156, 163, 175, 0.25);
+}
+.dark-theme .alert-info {
+    background-color: #3B82F6;
+    color: #F9FAFB;
+}
+.dark-theme .alert-success {
+    background-color: #10B981;
+    color: #F9FAFB;
+}
+.dark-theme .alert-danger {
+    background-color: #EF4444;
+    color: #FFFFFF;
+}
+.dark-theme .btn-primary {
+    background-color: #2563EB;
+    border-color: #2563EB;
+}
+.dark-theme .btn-primary:hover {
+    background-color: #3B82F6;
+    border-color: #3B82F6;
+}
+.dark-theme .text-link {
+    color: #60A5FA;
+}
+.dark-theme .text-link:hover {
+    color: #FBBF24;
+}
