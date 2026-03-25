@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - CIERREX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Base reset para Login (que no usará Sidebar) */
+        body {
+            padding-left: 0 !important; margin: 0;
+            min-height: 100vh;
+            background: #0F172A; /* Base oscura sólida */
+            background-image: radial-gradient(circle at top right, rgba(59, 130, 246, 0.15), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(251, 191, 36, 0.1), transparent 40%);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden; /* Evitar scroll si no es necesario */
+        }
+
+        /* Orbs animadas decorativas */
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none; opacity: 0.6; animation: float 10s ease-in-out infinite alternate; }
+        .orb-1 { width: 400px; height: 400px; background: #3B82F6; top: -100px; right: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #FBBF24; bottom: -50px; left: -50px; animation-delay: -5s; }
+        @keyframes float { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(30px) scale(1.1); } }
+
+        /* Contenedor central */
+        .login-wrap {
+            width: 100%; max-width: 440px; padding: 0 20px;
+            position: relative; z-index: 10;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Header de la marca */
+        .brand-area { text-align: center; margin-bottom: 40px; }
+        .brand-logo-img { max-height: 70px; object-fit: contain; margin-bottom: 16px; display: none; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.2rem; font-weight: 800; letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #ffffff 0%, #93C5FD 50%, #FBBF24 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin: 0 0 8px 0; line-height: 1;
+        }
+        .brand-tagline {
+            color: rgba(255, 255, 255, 0.5); font-size: 0.85rem;
+            font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin: 0;
+        }
+
+        /* Tarjeta de login */
+        .login-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px; padding: 40px 36px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+            width: 100%;
+        }
+
+        .login-card h5 {
+            font-family: 'Outfit', sans-serif;
+            color: #ffffff; font-weight: 700; font-size: 1.25rem;
+            text-align: center; margin: 0 0 28px 0;
+        }
+
+        /* Inputs de formulario */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-label {
+            display: block; color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.03em; margin-bottom: 8px;
+        }
+        .form-control {
+            width: 100%; background: rgba(0, 0, 0, 0.2) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 12px !important; color: #ffffff !important;
+            padding: 14px 18px; font-size: 0.95rem; font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.2s ease; box-sizing: border-box;
+        }
+        .form-control::placeholder { color: rgba(255, 255, 255, 0.2); }
+        .form-control:focus {
+            background: rgba(59, 130, 246, 0.08) !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+            outline: none;
+        }
+
+        /* Botón Entrar */
+        .btn-login {
+            width: 100%; background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+            border: none; border-radius: 12px; padding: 15px;
+            color: #ffffff; font-family: 'Outfit', sans-serif;
+            font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em;
+            cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.4);
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(59, 130, 246, 0.5); background: linear-gradient(135deg, #60A5FA, #2563EB); }
+        .btn-login:active { transform: translateY(0); }
+
+        /* Alertas */
+        #loginAlert {
+            display: none; border-radius: 10px; font-size: 0.85rem;
+            font-weight: 500; padding: 12px 16px; margin-bottom: 20px; text-align: center;
+        }
+        .alert-success { background: rgba(16, 185, 129, 0.15)!important; border: 1px solid rgba(16, 185, 129, 0.25)!important; color: #34D399!important; display: block!important; }
+        .alert-danger  { background: rgba(239, 68, 68, 0.15)!important;  border: 1px solid rgba(239, 68, 68, 0.25)!important;  color: #F87171!important;  display: block!important; }
+
+        /* Footer */
+        .login-footer {
+            text-align: center; margin-top: 32px;
+            color: rgba(255, 255, 255, 0.3); font-size: 0.75rem;
+            letter-spacing: 0.05em; font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="login-wrap">
+        <div class="brand-area">
+            <img id="loginBrandLogo" class="brand-logo-img" src="" alt="Logo">
+            <h1 class="brand-name" id="loginBrandText">CIERREX</h1>
+            <p class="brand-tagline">Sistema de Registro y Control</p>
+        </div>
+        
+        <div class="login-card">
+            <h5>Bienvenido de nuevo</h5>
+            <div id="loginAlert" class="alert" role="alert"></div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" placeholder="usuario@empresa.com" required>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 28px;">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+            </div>
+            
+            <button class="btn-login" onclick="login()">Iniciar Sesión</button>
+        </div>
+        
+        <div class="login-footer">CIERREX v2.0 &mdash; Diseñado con Electron</div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        async function login() {
+            const email    = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const alertBox = document.getElementById('loginAlert');
+            
+            if(!email || !password) {
+                alertBox.className = 'alert alert-danger';
+                alertBox.textContent = 'Por favor ingresa tus credenciales.';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            try {
+                const PORT     = (window.electronAPI && window.electronAPI.getPort()) || localStorage.getItem('PORT') || 3000;
+                const BASE_URL = `http://localhost:${PORT}/api`;
+                
+                const btn = document.querySelector('.btn-login');
+                const originalText = btn.textContent;
+                btn.textContent = 'Verificando...';
+                btn.style.opacity = '0.8';
+
+                const resp = await fetch(`${BASE_URL}/auth/login`, {
+                    method:'POST', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+                const data = await resp.json();
+                
+                btn.textContent = originalText;
+                btn.style.opacity = '1';
+
+                if (resp.ok) {
+                    alertBox.className = 'alert alert-success';
+                    alertBox.textContent = '¡Inicio de sesión exitoso!';
+                    alertBox.style.display = 'block';
+                    localStorage.setItem('currentUser', JSON.stringify(data));
+                    
+                    // Pequeña animación de salida
+                    document.querySelector('.login-wrap').style.transition = 'all 0.5s ease';
+                    document.querySelector('.login-wrap').style.opacity = '0';
+                    document.querySelector('.login-wrap').style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => { window.location.href = 'cierrex.html'; }, 600);
+                } else {
+                    alertBox.className = 'alert alert-danger';
+                    alertBox.textContent = data.error || 'Credenciales incorrectas.';
+                    alertBox.style.display = 'block';
+                }
+            } catch (e) {
+                alertBox.className = 'alert alert-danger';
+                alertBox.textContent = 'Error de conexión con el servidor.';
+                alertBox.style.display = 'block';
+            }
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+        // Cargar logo en el login
+        window.addEventListener('DOMContentLoaded', () => {
+            try { 
+                const globalConfig = JSON.parse(localStorage.getItem('globalConfig'));
+                if (globalConfig && globalConfig.logo_base64) {
+                    const logoImg = document.getElementById('loginBrandLogo');
+                    logoImg.src = globalConfig.logo_base64;
+                    logoImg.style.display = 'inline-block';
+                    document.getElementById('loginBrandText').style.display = 'none';
+                }
+            } catch(e) {}
+        });
+    </script>
+</body>
+</html>

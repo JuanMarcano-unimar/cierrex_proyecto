@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - CIERREX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus\+Jakarta\+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/pdf-utils.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .filter-row { display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:flex-end; }
+        .filter-row label { font-size:0.79rem; font-weight:600; color:rgba(255,255,255,0.5)!important; margin-bottom:5px; display:block; }
+        .btn-filter { background:linear-gradient(135deg,#3B82F6,#1E3A8A); border:none; border-radius:12px; padding:11px 24px; font-weight:700; color:#fff; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .btn-filter:hover { transform:translateY(-2px); box-shadow:0 5px 18px rgba(59,130,246,0.35); }
+
+        .p-card { border-radius:20px; overflow:hidden; margin-bottom:20px; }
+        .p-card-header { background:linear-gradient(135deg,#1E3A8A 0%,#3B82F6 55%,#FBBF24 100%); padding:18px 26px 14px; }
+        .p-card-header h5 { color:#fff!important; font-family:'Outfit',sans-serif; font-size:1.05rem; font-weight:700; margin:0; }
+        .p-card-header p  { color:rgba(255,255,255,0.7); font-size:0.82rem; margin:4px 0 0; }
+        .p-card-body { padding:22px 26px; }
+
+        /* Action buttons */
+        .btn-act { border:none; border-radius:8px; padding:5px 10px; font-size:0.72rem; font-weight:700; cursor:pointer; transition:all 0.15s; }
+        .btn-act:hover { transform:scale(1.07); }
+        .btn-act-pdf    { background:linear-gradient(135deg,#FB923C,#FBBF24); color:#fff; }
+        .btn-act-edit   { background:linear-gradient(135deg,#3B82F6,#1E3A8A); color:#fff; }
+        .btn-act-delete { background:linear-gradient(135deg,#EF4444,#B91C1C); color:#fff; }
+        .action-buttons-container { display:flex; gap:4px; flex-wrap:nowrap; }
+
+        .edit-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+        .edit-grid label { font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.5)!important; margin-bottom:4px; display:block; }
+
+        @media (max-width:768px) {
+            .filter-row { grid-template-columns:1fr 1fr; }
+            .filter-row .btn-filter { grid-column:1/-1; }
+            .p-card-body { padding:14px 12px; }
+            .edit-grid { grid-template-columns:1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <script src="js/app.js"></script>
+    <script src="js/sidebar.js"></script>
+
+    <div class="page-content">
+        <div class="page-header">
+            <h1>📋 Historial de Cierres</h1>
+            <p>Consulta y gestiona todos los cierres de caja registrados</p>
+        </div>
+
+        <div class="p-card">
+            <div class="p-card-header"><h5>🔍 Filtrar por Fecha</h5><p>Selecciona un rango para buscar en el historial</p></div>
+            <div class="p-card-body">
+                <div class="filter-row">
+                    <div><label for="startDate">Fecha Inicio</label><input type="date" class="form-control" id="startDate"></div>
+                    <div><label for="endDate">Fecha Fin</label><input type="date" class="form-control" id="endDate"></div>
+                    <button class="btn-filter" onclick="fetchCierres()">🔍 Filtrar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-card">
+            <div class="p-card-header"><h5>📄 Lista de Cierres</h5><p>Registros encontrados para el período seleccionado</p></div>
+            <div class="p-card-body" style="padding:0 0 2px;">
+                <div class="table-responsive">
+                    <table class="table table-striped" style="margin:0;">
+                        <thead><tr>
+                            <th>Fecha</th><th>Usuario</th><th>Efectivo</th><th>Débito</th><th>Crédito</th>
+                            <th>Pago Móvil</th><th>Transf.</th><th>Divisas</th><th>Zelle</th>
+                            <th>Total</th><th>Descripción</th><th>Foto</th><th id="adminActionsHeader">Acciones</th>
+                        </tr></thead>
+                        <tbody id="cierresTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal imagen -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">📷 Comprobante</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body text-center"><img id="modalImage" src="" class="img-fluid" alt="Comprobante" style="border-radius:12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal editar cierre -->
+    <div class="modal fade" id="editCierreModal" tabindex="-1" aria-labelledby="editCierreModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title" id="editCierreModalLabel">✏️ Editar Cierre</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="editCierreForm"><input type="hidden" id="editCierreId">
+                        <div class="edit-grid">
+                            <div><label>Efectivo (Bs)</label><input type="number" step="0.01" class="form-control" id="editEfectivo"></div>
+                            <div><label>Débito (Bs)</label><input type="number" step="0.01" class="form-control" id="editDebito"></div>
+                            <div><label>Crédito (Bs)</label><input type="number" step="0.01" class="form-control" id="editCredito"></div>
+                            <div><label>Pago Móvil (Bs)</label><input type="number" step="0.01" class="form-control" id="editPagoMovil"></div>
+                            <div><label>Transf. (Bs)</label><input type="number" step="0.01" class="form-control" id="editTransferencias"></div>
+                            <div><label>Divisas (USD)</label><input type="number" step="0.01" class="form-control" id="editDivisas"></div>
+                            <div><label>Zelle (USD)</label><input type="number" step="0.01" class="form-control" id="editZelle"></div>
+                            <div><label>Tasa (Bs/USD)</label><input type="number" step="0.01" class="form-control" id="editTasa"></div>
+                            <div><label>Fecha</label><input type="date" class="form-control" id="editDate"></div>
+                        </div>
+                        <div class="mt-3"><label style="font-size:0.78rem;font-weight:600;color:rgba(255,255,255,0.5)!important;">Descripción</label><textarea class="form-control" id="editDescription" rows="2"></textarea></div>
+                        <div class="mt-3"><label style="font-size:0.78rem;font-weight:600;color:rgba(255,255,255,0.5)!important;">Imagen (Base64)</label><input type="text" class="form-control" id="editImage" placeholder="Base64..."><small>No se edita manualmente.</small></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="updateCierre()">💾 Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/historial.js"></script>
+</body>
+</html>

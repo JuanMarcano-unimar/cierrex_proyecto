@@ -1,0 +1,368 @@
+/* ============================================================
+   CIERREX — styles.css GLOBAL
+   Paleta: Azul oscuro (#0F172A) → #1E3A8A → Dorado (#FBBF24)
+   Tipografía: Inter (body) + Syne (headings)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus\+Jakarta\+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Variables globales ── */
+:root {
+    --bg:          #0F172A;
+    --bg2:         #1E293B;
+    --surface:     #1E293B;
+    --border:      rgba(255,255,255,0.08);
+    --primary:     #3B82F6;
+    --primary-dk:  #1E3A8A;
+    --accent:      #FBBF24;
+    --accent2:     #FB923C;
+    --text:        #E2E8F0;
+    --text-muted:  #64748B;
+    --success:     #10B981;
+    --danger:      #EF4444;
+    --radius:      16px;
+    --sidebar-w:   220px;
+    --sidebar-col: 64px;
+}
+
+/* ── Reset base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    /* leave space for sidebar */
+    padding-left: var(--sidebar-col);
+    transition: padding-left 0.3s ease;
+}
+
+/* ======================================================
+   SIDEBAR NAVIGATION
+   ====================================================== */
+.sidebar {
+    position: fixed; top: 0; left: 0;
+    width: var(--sidebar-col);
+    height: 100vh;
+    background: linear-gradient(180deg, #0F172A 0%, #1E3A8A 60%, #0F172A 100%);
+    border-right: 1px solid rgba(59,130,246,0.15);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transition: width 0.32s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1000;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+}
+.sidebar:hover {
+    width: var(--sidebar-w);
+}
+
+/* Brand */
+.sidebar-brand {
+    display: flex; align-items: center; gap: 12px;
+    padding: 22px 16px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    white-space: nowrap; overflow: hidden; min-height: 70px;
+}
+.sidebar-brand .brand-icon {
+    width: 32px; height: 32px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 900; color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+.sidebar-brand .brand-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.3rem; font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; letter-spacing: -0.02em;
+    opacity: 0; transition: opacity 0.2s ease 0.05s;
+}
+.sidebar:hover .brand-text { opacity: 1; }
+
+/* Nav items */
+.sidebar-nav { flex: 1; padding: 12px 0; overflow: hidden; }
+.sidebar-nav a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px;
+    text-decoration: none; color: rgba(255,255,255,0.6);
+    font-size: 0.9rem; font-weight: 600;
+    white-space: nowrap; overflow: hidden;
+    border-radius: 0; transition: all 0.2s;
+    position: relative;
+}
+.sidebar-nav a:hover {
+    color: #fff;
+    background: rgba(59,130,246,0.12);
+}
+.sidebar-nav a.active {
+    color: #fff;
+    background: rgba(59,130,246,0.18);
+}
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--primary), var(--accent));
+    border-radius: 0 2px 2px 0;
+}
+.sidebar-nav a .nav-icon {
+    font-size: 1.15rem; flex-shrink: 0;
+    width: 28px; text-align: center;
+}
+.sidebar-nav a .nav-label {
+    opacity: 0; transition: opacity 0.18s ease 0.06s;
+    font-size: 0.88rem;
+}
+.sidebar:hover .nav-label { opacity: 1; }
+
+/* Hidden based on role - script handles this */
+.sidebar-nav a[data-role-min] { display: flex; }
+
+/* Sidebar footer (logout) */
+.sidebar-footer {
+    padding: 12px 0 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-footer a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px;
+    text-decoration: none; color: rgba(239,68,68,0.8);
+    font-size: 0.88rem; font-weight: 600;
+    transition: all 0.2s; white-space: nowrap; overflow: hidden;
+}
+.sidebar-footer a:hover { color: #EF4444; background: rgba(239,68,68,0.08); }
+.sidebar-footer .nav-icon { font-size: 1.15rem; flex-shrink: 0; width: 28px; text-align: center; }
+.sidebar-footer .nav-label { opacity: 0; transition: opacity 0.18s ease 0.06s; }
+.sidebar:hover .sidebar-footer .nav-label { opacity: 1; }
+
+/* Logo image in sidebar brand */
+.sidebar-brand-img {
+    width: 32px; height: 32px; object-fit: contain; border-radius: 6px;
+    display: none; flex-shrink: 0;
+}
+
+/* ======================================================
+   MAIN LAYOUT (compensar sidebar)
+   ====================================================== */
+.page-content {
+    min-height: 100vh;
+    padding: 0 24px 48px;
+}
+
+/* ======================================================
+   PAGE HEADER TYPOGRAPHY
+   ====================================================== */
+.page-header {
+    padding: 32px 0 24px;
+    text-align: left;
+}
+.page-header h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0; line-height: 1.1;
+}
+.page-header p {
+    color: var(--text-muted); font-size: 0.88rem;
+    margin: 6px 0 0; font-weight: 500;
+}
+
+/* ======================================================
+   CARDS
+   ====================================================== */
+.card, .p-card, .wizard-card {
+    background: var(--surface) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.card-body {
+    background: var(--surface) !important;
+    border-radius: var(--radius);
+    margin: 0 !important;
+}
+.card-login  { max-width: 420px; }
+.card-form   { max-width: 680px; }
+.card-dashboard { max-width: 900px; }
+.card-historial { max-width: 100%; }
+
+/* Card headers */
+.p-card-header, .wizard-header {
+    background: linear-gradient(135deg, var(--primary-dk) 0%, var(--primary) 55%, var(--accent) 100%) !important;
+}
+
+/* ======================================================
+   INPUTS & FORMS
+   ====================================================== */
+.form-control, .form-select, textarea {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1.5px solid rgba(255,255,255,0.1) !important;
+    color: var(--text) !important;
+    border-radius: 12px !important;
+    padding: 10px 14px;
+    transition: all 0.2s;
+}
+.form-control::placeholder { color: rgba(255,255,255,0.25) !important; }
+.form-control:focus, .form-select:focus {
+    background: rgba(59,130,246,0.08) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15) !important;
+    color: #fff !important;
+}
+.form-control-color {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1.5px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    height: 44px; cursor: pointer;
+}
+
+/* ======================================================
+   BUTTONS
+   ====================================================== */
+.btn-primary, .btn-secondary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dk)) !important;
+    border-color: transparent !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    transition: all 0.2s;
+    color: #fff !important;
+}
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(59,130,246,0.4) !important;
+    opacity: 0.92;
+}
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), #B91C1C) !important;
+    border-color: transparent !important; border-radius: 12px !important;
+    font-weight: 700; color: #fff !important;
+}
+.btn-outline-secondary {
+    border-color: rgba(255,255,255,0.15) !important;
+    color: var(--text-muted) !important; border-radius: 10px !important;
+}
+.btn-outline-secondary:hover {
+    background: rgba(255,255,255,0.06) !important;
+    color: #fff !important;
+}
+
+/* ======================================================
+   ALERTS
+   ====================================================== */
+.alert { display: none; border-radius: 12px; border: none; font-weight: 500; }
+.alert-success {
+    background: rgba(16,185,129,0.15) !important;
+    border: 1px solid rgba(16,185,129,0.3) !important;
+    color: #34D399 !important;
+}
+.alert-danger {
+    background: rgba(239,68,68,0.15) !important;
+    border: 1px solid rgba(239,68,68,0.3) !important;
+    color: #F87171 !important;
+}
+.alert-info {
+    background: rgba(59,130,246,0.15) !important;
+    border: 1px solid rgba(59,130,246,0.3) !important;
+    color: #93C5FD !important;
+}
+
+/* ======================================================
+   TABLES
+   ====================================================== */
+.table { color: var(--text) !important; }
+.table thead tr th {
+    background: linear-gradient(135deg, var(--primary-dk), var(--primary)) !important;
+    color: #fff !important;
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 12px 14px; border: none !important;
+}
+.table tbody tr { transition: background 0.15s; }
+.table tbody tr:hover { background: rgba(59,130,246,0.08) !important; }
+.table tbody td { border-color: rgba(255,255,255,0.05) !important; color: var(--text); padding: 11px 14px; vertical-align: middle; }
+.table-striped tbody tr:nth-of-type(odd) { background: rgba(255,255,255,0.03) !important; }
+
+/* ======================================================
+   MODALS
+   ====================================================== */
+.modal-content {
+    background: var(--bg2) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    border-radius: 20px !important;
+}
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-dk), var(--primary)) !important;
+    border: none !important; border-radius: 18px 18px 0 0 !important;
+}
+.modal-header .modal-title { color: #fff !important; font-weight: 700; }
+.modal-header .btn-close { filter: invert(1); opacity: 0.8; }
+.modal-body { background: var(--bg2) !important; color: var(--text); }
+.modal-footer { background: var(--bg2) !important; border-top: 1px solid rgba(255,255,255,0.06) !important; }
+
+/* ======================================================
+   MISCELLANEOUS
+   ====================================================== */
+h1, h2, h3, h4, h5, h6 { color: var(--text) !important; }
+label { color: rgba(255,255,255,0.6) !important; font-size: 0.79rem; font-weight: 600; }
+small { color: var(--text-muted) !important; }
+.text-muted { color: var(--text-muted) !important; }
+p { color: var(--text-muted); }
+
+/* Img preview thumbnail historial */
+.img-preview, .img-thumb {
+    width: 44px; height: 44px; object-fit: cover; border-radius: 8px;
+    cursor: pointer; border: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.2s;
+}
+.img-thumb:hover, .img-preview:hover { transform: scale(1.15); border-color: var(--primary); }
+
+/* Image preview in form */
+.image-preview-form {
+    max-width: 200px; margin-top: 10px; border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+/* ======================================================
+   SECTION TITLE (shared)
+   ====================================================== */
+.section-title {
+    font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--primary); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+}
+.section-title::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, var(--primary), transparent); }
+
+/* ======================================================
+   DARK THEME overrides (backward compat, now default-dark)
+   ====================================================== */
+.dark-theme body { background-color: var(--bg); color: var(--text); }
+
+/* ======================================================
+   ANIMATIONS
+   ====================================================== */
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+@keyframes fadeUp { from { opacity:0; transform:translateY(18px);} to {opacity:1;transform:translateY(0);} }
+.card, .p-card, .wizard-card { animation: fadeUp 0.38s ease; }
+
+/* ======================================================
+   SCROLLBAR (webkit)
+   ====================================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ======================================================
+   RESPONSIVE
+   ====================================================== */
+@media (max-width: 768px) {
+    :root { --sidebar-col: 0px; }
+    body { padding-left: 0; }
+    .sidebar { width: 100%; height: auto; flex-direction: row; position: relative; }
+}
