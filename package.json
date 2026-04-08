@@ -1,0 +1,22 @@
+{
+  "name": "cierrex-v2",
+  "version": "2.0.0",
+  "description": "Cierrex with SQL and Backend",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
+    "nodemailer": "^8.0.3",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "electron": "^38.1.2"
+  }
+}
